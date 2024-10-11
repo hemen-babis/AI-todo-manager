@@ -81,8 +81,8 @@ To run this project locally, follow these steps:
 5. **Reverting a Task**:
    - In the "Completed Tasks" section, click "Undo Complete" to move a task back to the incomplete section.
 
-![Screenshot 2024-10-10 210009](https://github.com/user-attachments/assets/f8e7b592-5675-4491-befe-e0196c9ef9bf)
-![image](https://github.com/user-attachments/assets/828e1368-2ed5-4da4-8a31-24634997383f)
+![image](https://github.com/user-attachments/assets/0f0d6589-9290-42c0-adbf-39b9f368a552)
+
 
 
 ## AI Model Details
