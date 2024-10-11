@@ -1,0 +1,258 @@
+<!--
+Author: Hemen Babis
+Date: February 2, 2023
+Description:
+This is the frontend HTML for the AI-powered To-Do List Manager. It provides a user-friendly 
+interface to add, edit, complete, and delete tasks. Tasks are displayed in order of their AI-predicted 
+priority, helping users manage their time effectively. Completed tasks are shown separately, 
+and users can undo completed tasks or delete them.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered To-Do List Manager</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f0f8ff, #a8c0ff);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;  
+            padding-top: 20px;  
+            background-color: #ffffff;
+        }
+
+        .container {
+            background-color: white;
+            box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 100%;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h1 {
+            font-weight: 600;
+            text-align: center;
+            color: #4A90E2;
+            font-size: 3rem;
+            margin-bottom: 20px;  
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 30px;
+            color: #4A90E2;
+        }
+
+        .task-progress {
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 15px;  
+            color: #4CAF50;
+            font-size: 1.2rem;  
+            background-color: #e6f0ff;  
+            padding: 10px;  
+            border-radius: 10px;  
+        }
+
+        #task-list, #completed-task-list {
+            margin-top: 10px;
+            max-height: 300px;  
+            overflow-y: auto;  
+        }
+
+        .list-group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s ease;
+            padding: 15px;
+            word-wrap: break-word;  
+            background-color: #f5faff;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .list-group-item:hover {
+            transform: scale(1.02);
+            background-color: #ebf3ff;
+        }
+
+        .complete-btn, .edit-btn, .delete-btn {
+            margin-left: 10px;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .complete-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .complete-btn:hover {
+            background-color: #45a049;
+        }
+
+        .edit-btn {
+            background-color: #FFC107;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background-color: #E0A800;
+        }
+
+        .delete-btn {
+            background-color: #FF4D4D;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #E63946;
+        }
+
+        .task-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Task Manager</h1>
+
+        <!-- Task form for adding/editing tasks -->
+        <form id="task-form" class="mb-3">
+            <input type="hidden" id="task_id" name="task_id">
+            <div class="form-group">
+                <label for="title">Task Title</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <input type="text" class="form-control" id="description" name="description">
+            </div>
+            <div class="form-group">
+                <label for="due_date">Due Date</label>
+                <input type="date" class="form-control" id="due_date" name="due_date" required>
+            </div>
+            <div class="form-group">
+                <label for="importance">Importance (1-5)</label>
+                <input type="number" class="form-control" id="importance" name="importance" min="1" max="5" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Save Task</button>
+        </form>
+
+        <!-- Incomplete Tasks Section -->
+        <h2>Incomplete Tasks</h2>
+        <ul id="task-list" class="list-group">
+            {% for task in incomplete_tasks %}
+                <li class="list-group-item">
+                    <div>
+                        <strong>{{ task.title }}</strong><br>
+                        <small>Due: {{ task.due_date }} | Importance: {{ task.importance }}</small>
+                    </div>
+                    <div class="task-buttons">
+                        <button class="btn complete-btn" data-id="{{ task.id }}">Complete</button>
+                        <button class="btn edit-btn" data-id="{{ task.id }}" data-title="{{ task.title }}" data-description="{{ task.description }}" data-due_date="{{ task.due_date }}" data-importance="{{ task.importance }}">Edit</button>
+                        <button class="btn delete-btn" data-id="{{ task.id }}">Delete</button>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <!-- Completed Tasks Section -->
+        <h2>Completed Tasks</h2>
+        <ul id="completed-task-list" class="list-group">
+            {% for task in completed_tasks %}
+                <li class="list-group-item list-group-item-success">
+                    <div>
+                        <strong>{{ task.title }}</strong><br>
+                        <small>Due: {{ task.due_date }} | Importance: {{ task.importance }}</small>
+                    </div>
+                    <div class="task-buttons">
+                        <button class="btn complete-btn" data-id="{{ task.id }}">Undo Complete</button>
+                        <button class="btn delete-btn" data-id="{{ task.id }}">Delete</button>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        // Handle form submission for add/edit
+        $('#task-form').on('submit', function(event) {
+            event.preventDefault();
+            const taskId = $('#task_id').val();  // Get task ID (if present)
+            const url = '/add_task';
+
+            $.post(url, $(this).serialize(), function(response) {
+                if (response.success) {
+                    location.reload();
+                }
+            });
+        });
+
+        // Edit Task - Prefill the form with task data
+        $('.edit-btn').on('click', function() {
+            const taskId = $(this).data('id');
+            const title = $(this).data('title');
+            const description = $(this).data('description');
+            const dueDate = $(this).data('due_date');
+            const importance = $(this).data('importance');
+
+            // Populate the form with the task data
+            $('#task_id').val(taskId);  // Set the task ID for editing
+            $('#title').val(title);
+            $('#description').val(description);
+            $('#due_date').val(dueDate);
+            $('#importance').val(importance);
+
+            $('html, body').animate({ scrollTop: $('#task-form').offset().top }, 'slow');
+        });
+
+        // Mark task as complete or undo complete
+        $('.complete-btn').on('click', function() {
+            const taskId = $(this).data('id');
+            $.post('/complete_task', { task_id: taskId }, function(response) {
+                if (response.success) {
+                    location.reload();
+                }
+            });
+        });
+
+        // Delete Task
+        $('.delete-btn').on('click', function() {
+            const taskId = $(this).data('id');
+            $.post('/delete_task', { task_id: taskId }, function(response) {
+                if (response.success) {
+                    location.reload();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
