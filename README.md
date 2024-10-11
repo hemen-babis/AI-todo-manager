@@ -82,7 +82,8 @@ To run this project locally, follow these steps:
    - In the "Completed Tasks" section, click "Undo Complete" to move a task back to the incomplete section.
 
 ![Screenshot 2024-10-10 210009](https://github.com/user-attachments/assets/f8e7b592-5675-4491-befe-e0196c9ef9bf)
-![Screenshot 2024-10-10 210037](https://github.com/user-attachments/assets/e8e9e40f-c869-4432-9ce5-a09c840e5680)
+![image](https://github.com/user-attachments/assets/828e1368-2ed5-4da4-8a31-24634997383f)
+
 
 ## AI Model Details
 The AI model is trained using a **Decision Tree Regressor** from **Scikit-learn**. It predicts the priority of tasks based on:
